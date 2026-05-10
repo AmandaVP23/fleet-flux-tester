@@ -1,5 +1,6 @@
 import { API_URL } from './constants.ts';
 import {buildUrl} from "./params.ts";
+import type {CommandParams} from "../types/types.ts";
 
 export async function apiRequest(
     path: string,
@@ -8,9 +9,9 @@ export async function apiRequest(
         method?: string;
         body?: any;
     },
-    params?: Record<string, string>,
+    params: CommandParams = {},
 ) {
-    const url = buildUrl(`${API_URL}${path}`, params || {});
+    const url = buildUrl(`${API_URL}${path}`, params);
     console.log('URL', url);
 
     return fetch(url, {

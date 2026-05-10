@@ -19,6 +19,8 @@ export function showHelp() {
             );
         }
 
+        console.log('Use --tenant to specify tenant');
+
         console.log('');
     }
 }

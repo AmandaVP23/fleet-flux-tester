@@ -1,7 +1,9 @@
+import type {CommandParams} from "../types/types.ts";
+
 export const multipleRuns = (
     count: number,
     fn: Function,
-    params: Record<string, string>,
+    params: CommandParams,
 ) => {
     return Array.from({ length: count }).reduce(
         async (prev) => {

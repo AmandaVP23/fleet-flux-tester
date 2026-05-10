@@ -1,26 +1,27 @@
 // src/cli/router.ts
 
-import {adminCommands} from "../commands/superAdmin.ts";
+import {superAdminCommands} from "../commands/superAdmin.ts";
 import {multipleRuns} from "../commands/multiple.ts";
 import type {CommandDefinition} from "../types/types.ts";
+import {extractExecutionContext} from "../utils/misc.ts";
+import {orgAdminCommands} from "../commands/orgAdmin.ts";
 
 export const registry: Record<string, Record<string, CommandDefinition>> = {
-    superAdmin: adminCommands,
-    // tenant: tenantCommands
+    superAdmin: superAdminCommands,
+    orgAdmin: orgAdminCommands,
 };
-
-function capitalizeFirstLetter(value: string) {
-    return String(value).charAt(0).toUpperCase() + String(value).slice(1);
-}
 
 export async function runCommand(
     scope: string,
     action: string,
-    multiple: boolean,
-    count: number | null,
-    params: Record<string, string>
+    params: Record<string, string | boolean>
 ) {
     const group = registry[scope];
+
+    const {
+        count,
+        multiple,
+    } = extractExecutionContext(params);
 
     if (!group) {
         throw new Error(`Unknown scope: ${scope}`);
@@ -42,6 +43,8 @@ export async function runCommand(
             `Command '${scope}.${action}' does not allow multiple execution`
         );
     }
+
+    console.log(params);
 
     if (multiple && count) {
         // await fn(count, params);

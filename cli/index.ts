@@ -21,31 +21,18 @@ if (!scope || !action) {
     process.exit(1);
 }
 
-let filteredArgs = [...args];
-let multiple = false;
-if (args.includes('multiple')) {
-    filteredArgs = args.filter(el => el !== 'multiple');
-    multiple = true;
-}
-
 // parse --key=value args
-const params: Record<string, string> = {};
+const params: Record<string, string | boolean> = {};
 
-for (const arg of filteredArgs) {
+for (const arg of args) {
     const [k, v] = arg.replace(/^--/, "").split("=");
-    if (k && v) params[k] = v;
-}
-
-let count: number | null = null;
-
-if (params["count"]) {
-    count = Number(params["count"]);
+    if (k) {
+        params[k] = v || true;
+    }
 }
 
 await runCommand(
     scope,
     action,
-    multiple,
-    count,
     params
 );

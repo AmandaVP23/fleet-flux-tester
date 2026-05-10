@@ -2,13 +2,12 @@ import { getTokenForUser } from '../auth/getTokenForUser.ts';
 import { apiRequest } from '../utils/apiRequest.ts';
 import { fakerEN_GB as faker } from '@faker-js/faker';
 import { getNextOrganizationName } from "../utils/organizationNameProvider.ts";
-import type {CommandDefinition} from "../types/types.ts";
+import type {CommandDefinition, CommandParams} from "../types/types.ts";
 import {getNextVehicleBrandName} from "../utils/vehicleBrandNameProvider.ts";
 import {createUser, createVehicle, getAllVehicleBrands, getUsers} from "./miscRequests.ts";
-import {getDomainName} from "../utils/misc.ts";
-import {buildUrl} from "../utils/params.ts";
+import {generateEmailWithoutDomain} from "../utils/misc.ts";
 
-export const adminCommands: Record<string, CommandDefinition> = {
+export const superAdminCommands: Record<string, CommandDefinition> = {
     getToken: {
         description: 'Get token as superAdmin',
         allowMultiple: false,
@@ -22,13 +21,13 @@ export const adminCommands: Record<string, CommandDefinition> = {
         description: 'Creates organization',
         allowMultiple: true,
 
-        execute: async (params: Record<string, string>) => {
+        execute: async (params) => {
             const token = await getTokenForUser("superadmin");
 
             const name = getNextOrganizationName();
             const firstName = faker.person.firstName();
             const lastName = faker.person.lastName();
-            const emailDomain = getDomainName(name);
+            const emailDomain = generateEmailWithoutDomain(name);
 
             const payload = {
                 name,
@@ -66,7 +65,7 @@ export const adminCommands: Record<string, CommandDefinition> = {
         description: 'Creates user',
         allowMultiple: true,
 
-        execute: async (params: Record<string, string>) => {
+        execute: async (params) => {
             if (params['organizationId']) {
                 new Error('For the vehicle creation set the organizationId');
             }
@@ -75,7 +74,7 @@ export const adminCommands: Record<string, CommandDefinition> = {
 
             const token = await getTokenForUser("superadmin");
 
-            await createUser(token, organizationId, params);
+            await createUser(token, organizationId as unknown as number, params);
         }
     },
 
@@ -83,7 +82,7 @@ export const adminCommands: Record<string, CommandDefinition> = {
     createVehicleBrand: {
         description: 'Creates vehicle brand',
         allowMultiple: true,
-        execute: async (params: Record<string, string>) => {
+        execute: async (params) => {
             const token = await getTokenForUser("superadmin");
 
             try {
@@ -121,12 +120,12 @@ export const adminCommands: Record<string, CommandDefinition> = {
         description: 'Creates vehicle',
         allowMultiple: true,
 
-        execute: async (params: Record<string, string>) => {
-            if (params['organizationId']) {
-                new Error('For the vehicle creation set the organizationId');
-            }
+        execute: async (params) => {
+            const organizationId= Number(params['organizationId']);
 
-            const organizationId= params['organizationId'];
+            if (isNaN(organizationId) || !organizationId) {
+                new Error('organizationId should be set and be a number for the vehicle creation');
+            }
 
             const token = await getTokenForUser("superadmin");
 
@@ -143,7 +142,7 @@ export const adminCommands: Record<string, CommandDefinition> = {
         description: 'List organizations as SuperAdmin',
         allowMultiple: false,
 
-        execute: async (params: Record<string, string>) => {
+        execute: async (params: CommandParams) => {
             const token = await getTokenForUser("superadmin");
 
             try {
@@ -172,7 +171,7 @@ export const adminCommands: Record<string, CommandDefinition> = {
         description: 'List users as SuperAdmin',
         allowMultiple: false,
 
-        execute: async (params: Record<string, string>) => {
+        execute: async (params: CommandParams) => {
             const token = await getTokenForUser("superadmin");
 
             return await getUsers(token, params);
@@ -183,10 +182,10 @@ export const adminCommands: Record<string, CommandDefinition> = {
         description: 'List vehicle brands as SuperAdmin',
         allowMultiple: false,
 
-        execute: async (params: Record<string, string>) => {
+        execute: async (params: CommandParams) => {
             const token = await getTokenForUser("superadmin");
 
-            return await getAllVehicleBrands(token);
+            return await getAllVehicleBrands(token, params);
         }
     },
 };

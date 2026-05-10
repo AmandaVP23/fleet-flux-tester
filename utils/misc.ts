@@ -1,5 +1,21 @@
 import {faker} from "@faker-js/faker";
 
+export const extractExecutionContext = (params: Record<string, string | boolean>) => {
+    const {
+        tenant,
+        count,
+        multiple,
+        ...cleanParams
+    } = params;
+
+    return {
+        tenant,
+        multiple: Boolean(multiple),
+        count: count ? Number(count) : null,
+        cleanParams,
+    };
+};
+
 export const generatePlate = () => {
     let firstPart = faker.string.alpha({ length: 2 }).toUpperCase();
     let middlePart = faker.string.numeric({ length: 2 });
@@ -14,7 +30,7 @@ export const generatePlate = () => {
     return `${firstPart}-${middlePart}-${lastPart}`;
 };
 
-export const getDomainName = (value: string) => {
+export const generateEmailWithoutDomain = (value: string) => {
     return value
         .replace(/\s+/g, "")        // remove spaces
         .replace(/[^a-z0-9]/gi, "") // remove special characters

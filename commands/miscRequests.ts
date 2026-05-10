@@ -4,8 +4,9 @@ import { getNextVehicleModelForBrand } from "../utils/vehicleModelNameProvider.t
 import { faker } from "@faker-js/faker";
 import { generatePlate } from "../utils/misc.ts";
 import { USER_ROLE, VEHICLE_CATEGORY, VEHICLE_FUEL_TYPE, VEHICLE_OWNERSHIP, VEHICLE_TYPE } from "../utils/constants.ts";
+import type {CommandParams} from "../types/types.ts";
 
-export const getAllVehicleBrands = async (token: string, params?: Record<string, string>): Promise<any[]> => {
+export const getAllVehicleBrands = async (token: string, params?: CommandParams): Promise<any[]> => {
     try {
         const res = await apiRequest('/vehicle-brands', {
             token,
@@ -26,7 +27,7 @@ export const getAllVehicleBrands = async (token: string, params?: Record<string,
     }
 };
 
-export const getUsers = async (token: string, params?: Record<string, string>): Promise<any[]> => {
+export const getUsers = async (token: string, params?: CommandParams): Promise<any[]> => {
     try {
         const res = await apiRequest('/users', {
             token,
@@ -69,7 +70,7 @@ export const getOrganizationById = async (token: string, orgId: string ) => {
     }
 }
 
-export const createVehicle = async (token: string, organizationId?: string | number, params: Record<string, string> = {}) => {
+export const createVehicle = async (token: string, organizationId?: string | number, params: CommandParams = {}) => {
     try {
         const brandId = params['brandId'];
         let model = params['model'];
@@ -127,7 +128,7 @@ export const createVehicle = async (token: string, organizationId?: string | num
     }
 };
 
-export const createUser = async (token: string, organizationId?: string | number, params: Record<string, string> = {}) => {
+export const createUser = async (token: string, organizationId?: string | number, params: CommandParams  = {}) => {
     try {
         const firstName = faker.person.firstName();
         const lastName = faker.person.lastName();

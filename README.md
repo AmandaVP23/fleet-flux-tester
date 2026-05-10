@@ -25,5 +25,3 @@ JSON-driven execution
     ]
 }
 ```
-
-create multiple, example createUser --count=3 -> cria 3 users

@@ -1,6 +1,6 @@
 {
   "name": "fleet-flux-tester",
-  "module": "index.ts",
+  "module": "cli/index.ts",
   "type": "module",
   "private": true,
   "devDependencies": {

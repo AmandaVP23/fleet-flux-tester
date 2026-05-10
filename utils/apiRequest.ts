@@ -1,4 +1,5 @@
 import { API_URL } from './constants.ts';
+import {buildUrl} from "./params.ts";
 
 export async function apiRequest(
     path: string,
@@ -6,9 +7,13 @@ export async function apiRequest(
         token: string;
         method?: string;
         body?: any;
-    }
+    },
+    params?: Record<string, string>,
 ) {
-    return fetch(`${API_URL}${path}`, {
+    const url = buildUrl(`${API_URL}${path}`, params || {});
+    console.log('URL', url);
+
+    return fetch(url, {
         method: options.method ?? "GET",
         headers: {
             Authorization: `Bearer ${options.token}`,

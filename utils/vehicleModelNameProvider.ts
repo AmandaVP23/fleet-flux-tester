@@ -16,12 +16,7 @@ export function getNextVehicleModelForBrand(brand: string): string {
     const allModels = readJson<Record<string, string[]>>(ALL_NAMES_PATH);
     const usedModels = readJson<Record<string, string[]>>(USED_NAMES_PATH);
 
-    const brandModels = allModels[brand];
-
-    if (!brandModels) {
-        throw new Error(`Unknown brand: ${brand}`);
-    }
-
+    const brandModels = allModels[brand] || [];
     const usedForBrand = usedModels[brand] ?? [];
 
     const available = brandModels.filter(

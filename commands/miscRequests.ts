@@ -72,7 +72,7 @@ export const getOrganizationById = async (token: string, orgId: string ) => {
 
 export const createVehicle = async (token: string, organizationId?: string | number, params: CommandParams = {}) => {
     try {
-        const brandId = params['brandId'];
+        let brandId = params['brandId'];
         let model = params['model'];
         if (!brandId) {
             const list = await getAllVehicleBrands(token);
@@ -83,6 +83,7 @@ export const createVehicle = async (token: string, organizationId?: string | num
             }
 
             model = getNextVehicleModelForBrand(randomBrand.name);
+            brandId = randomBrand.id;
         }
 
         const payload = {

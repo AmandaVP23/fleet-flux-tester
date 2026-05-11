@@ -6,6 +6,7 @@ import type {CommandDefinition, CommandParams} from "../types/types.ts";
 import {getNextVehicleBrandName} from "../utils/vehicleBrandNameProvider.ts";
 import {createUser, createVehicle, getAllVehicleBrands, getUsers, getVehicles} from "./miscRequests.ts";
 import {extractExecutionContext, generateEmailWithoutDomain} from "../utils/misc.ts";
+import {logData} from "../utils/log.ts";
 
 export const superAdminCommands: Record<string, CommandDefinition> = {
     getToken: {
@@ -52,7 +53,7 @@ export const superAdminCommands: Record<string, CommandDefinition> = {
                 }
 
                 console.log("--- Created organization ---");
-                console.log(resData);
+                logData(resData);
             } catch (error) {
                 // @ts-ignore
                 console.error(error.message);
@@ -107,7 +108,7 @@ export const superAdminCommands: Record<string, CommandDefinition> = {
                 }
 
                 console.log("--- Created vehicle brand ---");
-                console.log(resData);
+                logData(resData);
             } catch (error) {
                 // @ts-ignore
                 console.error(error.message);
@@ -158,7 +159,7 @@ export const superAdminCommands: Record<string, CommandDefinition> = {
                 }
 
                 console.log('--------> Organizations:')
-                console.log(resData);
+                logData(resData);
             } catch (error) {
                 // @ts-ignore
                 console.error(error.message);

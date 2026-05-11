@@ -5,6 +5,7 @@ import { faker } from "@faker-js/faker";
 import { generatePlate } from "../utils/misc.ts";
 import { USER_ROLE, VEHICLE_CATEGORY, VEHICLE_FUEL_TYPE, VEHICLE_OWNERSHIP, VEHICLE_TYPE } from "../utils/constants.ts";
 import type {CommandParams} from "../types/types.ts";
+import {logData} from "../utils/log.ts";
 
 export const getAllVehicleBrands = async (token: string, params?: CommandParams): Promise<any[]> => {
     try {
@@ -41,7 +42,7 @@ export const getUsers = async (token: string, params?: CommandParams): Promise<a
         }
 
         console.log('-------> Users:');
-        console.log(resData);
+        logData(resData);
         return resData as any[];
     } catch (error) {
         // @ts-ignore
@@ -108,7 +109,7 @@ export const createVehicle = async (token: string, organizationId?: string | num
             ...params,
         };
 
-        const res = await apiRequest('/vehicle', {
+        const res = await apiRequest('/vehicles', {
             token,
             method: 'POST',
             body: payload,
@@ -122,7 +123,7 @@ export const createVehicle = async (token: string, organizationId?: string | num
         }
 
         console.log("--- Created vehicle ---");
-        console.log(resData);
+        logData(resData);
     } catch (error) {
         // @ts-ignore
         console.error(error.message);
@@ -157,7 +158,7 @@ export const createUser = async (token: string, organizationId?: string | number
         }
 
         console.log("--- Created user ---");
-        console.log(resData);
+        logData(resData);
     } catch (error) {
         // @ts-ignore
         console.error(error.message);
@@ -173,12 +174,13 @@ export const getVehicles = async (token: string, params?: CommandParams): Promis
         const resData = await res.json();
         if (!res.ok) {
             console.error("Could not get vehicles");
-            console.log(resData);
+            logData(resData);
             return [];
         }
 
         console.log('-------> Vehicles:');
-        console.log(resData);
+        logData(resData);
+
         return resData as any[];
     } catch (error) {
         // @ts-ignore

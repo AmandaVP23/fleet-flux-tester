@@ -9,7 +9,7 @@ export const extractExecutionContext = (params: Record<string, string | boolean>
     } = params;
 
     return {
-        tenant,
+        tenant: String(tenant),
         multiple: Boolean(multiple),
         count: count ? Number(count) : null,
         cleanParams,

@@ -4,8 +4,8 @@ import { fakerEN_GB as faker } from '@faker-js/faker';
 import { getNextOrganizationName } from "../utils/organizationNameProvider.ts";
 import type {CommandDefinition, CommandParams} from "../types/types.ts";
 import {getNextVehicleBrandName} from "../utils/vehicleBrandNameProvider.ts";
-import {createUser, createVehicle, getAllVehicleBrands, getUsers} from "./miscRequests.ts";
-import {generateEmailWithoutDomain} from "../utils/misc.ts";
+import {createUser, createVehicle, getAllVehicleBrands, getUsers, getVehicles} from "./miscRequests.ts";
+import {extractExecutionContext, generateEmailWithoutDomain} from "../utils/misc.ts";
 
 export const superAdminCommands: Record<string, CommandDefinition> = {
     getToken: {
@@ -186,6 +186,22 @@ export const superAdminCommands: Record<string, CommandDefinition> = {
             const token = await getTokenForUser("superadmin");
 
             return await getAllVehicleBrands(token, params);
+        }
+    },
+
+    listVehicles: {
+        description: 'List vehicles as SuperAdmin',
+        allowMultiple: false,
+
+        execute: async (params: CommandParams) => {
+            const {
+                tenant,
+                cleanParams,
+            } = extractExecutionContext(params);
+
+            const token = await getTokenForUser("orgAdmin", tenant);
+
+            return await getVehicles(token, cleanParams);
         }
     },
 };

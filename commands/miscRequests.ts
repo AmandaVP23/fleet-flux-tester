@@ -163,3 +163,26 @@ export const createUser = async (token: string, organizationId?: string | number
         console.error(error.message);
     }
 }
+
+export const getVehicles = async (token: string, params?: CommandParams): Promise<any[]> => {
+    try {
+        const res = await apiRequest('/vehicles', {
+            token,
+        }, params);
+
+        const resData = await res.json();
+        if (!res.ok) {
+            console.error("Could not get vehicles");
+            console.log(resData);
+            return [];
+        }
+
+        console.log('-------> Vehicles:');
+        console.log(resData);
+        return resData as any[];
+    } catch (error) {
+        // @ts-ignore
+        console.error(error.message);
+        return [];
+    }
+};

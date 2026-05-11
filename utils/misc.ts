@@ -1,17 +1,22 @@
 import {faker} from "@faker-js/faker";
+import type {CommandParams} from "../types/types.ts";
 
-export const extractExecutionContext = (params: Record<string, string | boolean>) => {
+export const extractExecutionContext = (params: CommandParams) => {
     const {
         tenant,
         count,
         multiple,
+        id,
         ...cleanParams
     } = params;
 
     return {
-        tenant: String(tenant),
+        tenant: tenant ? String(tenant) : undefined,
         multiple: Boolean(multiple),
         count: count ? Number(count) : null,
+        context: {
+            id,
+        },
         cleanParams,
     };
 };

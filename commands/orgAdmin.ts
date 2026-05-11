@@ -1,7 +1,9 @@
 import type {CommandDefinition, CommandParams} from "../types/types.ts";
-import {getTokenForUser} from "../auth/getTokenForUser.ts";
-import {createVehicle, getAllVehicleBrands, getUsers, getVehicles} from "./miscRequests.ts";
-import {extractExecutionContext} from "../utils/misc.ts";
+import { getTokenForUser } from "../auth/getTokenForUser.ts";
+import { extractExecutionContext } from "../utils/misc.ts";
+import { getVehicles, getUsers, getAllVehicleBrands } from "./requests/list.ts";
+import {createVehicle} from "./requests/create.ts";
+import {getVehicleById} from "./requests/getById.ts";
 
 export const orgAdminCommands: Record<string, CommandDefinition> = {
     // -------------------------------- Create vehicle --------------------------------
@@ -18,6 +20,26 @@ export const orgAdminCommands: Record<string, CommandDefinition> = {
             const token = await getTokenForUser("orgAdmin", tenant);
 
             return await createVehicle(token, undefined, cleanParams);
+        }
+    },
+    /*
+        ----------------------------------------------------------------
+        ----------------------- Get By ID ------------------------------
+        ----------------------------------------------------------------
+     */
+    getVehicleById: {
+        description: 'Get vehicle by id as OrgAdmin',
+        allowMultiple: false,
+
+        execute: async (params: CommandParams) => {
+            const {
+                tenant,
+                context,
+            } = extractExecutionContext(params);
+
+            const token = await getTokenForUser("orgAdmin", tenant);
+
+            getVehicleById(token, context.id);
         }
     },
 

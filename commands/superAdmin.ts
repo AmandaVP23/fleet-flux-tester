@@ -4,9 +4,10 @@ import { fakerEN_GB as faker } from '@faker-js/faker';
 import { getNextOrganizationName } from "../utils/organizationNameProvider.ts";
 import type {CommandDefinition, CommandParams} from "../types/types.ts";
 import {getNextVehicleBrandName} from "../utils/vehicleBrandNameProvider.ts";
-import {createUser, createVehicle, getAllVehicleBrands, getUsers, getVehicles} from "./miscRequests.ts";
 import {extractExecutionContext, generateEmailWithoutDomain} from "../utils/misc.ts";
 import {logData} from "../utils/log.ts";
+import {getVehicles, getUsers, getAllVehicleBrands} from "./requests/list.ts";
+import {createUser, createVehicle} from "./requests/create.ts";
 
 export const superAdminCommands: Record<string, CommandDefinition> = {
     getToken: {
